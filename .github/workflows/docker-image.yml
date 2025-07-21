@@ -18,6 +18,9 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Log in to Red Hat Registry
+      run: echo "${{ secrets.REDHAT_PASSWORD }}" | docker login registry.redhat.io -u "${{ secrets.REDHAT_USERNAME }}" --password-stdin
 
     - name: Set tag variables
       id: vars
