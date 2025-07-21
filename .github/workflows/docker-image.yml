@@ -1,0 +1,36 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Set tag variables
+      id: vars
+      run: echo "tag=$(date +%Y%m%d%H%M%S)" >> "$GITHUB_OUTPUT"
+
+    - name: Build Docker image with timestamp tag
+      run: |
+        docker build . \
+          --file Dockerfile \
+          --tag shu5hu/ansible-ee:${{ steps.vars.outputs.tag }} \
+          --tag shu5hu/ansible-ee:latest
+
+    - name: Push Docker images
+      run: |
+        docker push shu5hu/ansible-ee:${{ steps.vars.outputs.tag }}
+        docker push shu5hu/ansible-ee:latest
