@@ -20,6 +20,7 @@ RUN python3 -m pip install requests-oauthlib ; \
     ansible-galaxy collection install f5networks.f5_modules ; \
     ansible-galaxy collection install fortinet.fortios ; \
     ansible-galaxy collection install fortinet.fortimanager ; \
+    ansible-galaxy collection install ansible.controller ; \
     ansible-galaxy collection install awx.awx ; \
     ansible-galaxy collection install theforeman.foreman ; \
     ansible-galaxy collection install community.vmware ; \
