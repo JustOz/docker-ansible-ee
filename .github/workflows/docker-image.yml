@@ -31,7 +31,8 @@ jobs:
         docker build . \
           --file Dockerfile \
           --tag shu5hu/ansible-ee:${{ steps.vars.outputs.tag }} \
-          --tag shu5hu/ansible-ee:latest
+          --tag shu5hu/ansible-ee:latest \
+          --build-arg HUB_TOKEN=${{ secrets.AUTOMATION_HUB_TOKEN }}
 
     - name: Push Docker images
       run: |
