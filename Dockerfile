@@ -4,7 +4,12 @@ FROM registry.redhat.io/ansible-automation-platform-25/ee-minimal-rhel9
 USER root
 
 RUN --mount=type=secret,id=hub_token \
-    HUB_TOKEN=$(cat /run/secrets/hub_token) && \
+    if [ -f /run/secrets/hub_token ]; then \
+        echo "Secret file found"; \
+        HUB_TOKEN=$(cat /run/secrets/hub_token); \
+    else \
+        echo "Secret file NOT found"; exit 1; \
+    fi && \
     mkdir -p /etc/ansible && \
     printf "[galaxy]\nserver_list = automation_hub, galaxy\n\n\
 [galaxy_server.automation_hub]\nurl=https://console.redhat.com/api/automation-hub/content/published/\ntoken=%s\n\n\
