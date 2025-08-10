@@ -5,7 +5,7 @@ ARG HUB_TOKEN
 
 RUN mkdir -p /etc/ansible && \
     printf "[galaxy]\nserver_list = automation_hub, galaxy\n\n\
-[galaxy_server.automation_hub]\nurl=https://console.redhat.com/api/automation-hub/content/published/\ntoken=%s\n\n\
+[galaxy_server.automation_hub]\nurl=https://cloud.redhat.com/api/automation-hub/\nauth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token\ntoken=%s\n\n\
 [galaxy_server.galaxy]\nurl=https://galaxy.ansible.com/\n" "$HUB_TOKEN" > /etc/ansible/ansible.cfg && \
     python3 -m pip install requests-oauthlib kubernetes jmespath PyYAML awxkit pymssql packaging gitpython pathlib && \
    # ansible-galaxy collection install ansible.controller --pre && \
