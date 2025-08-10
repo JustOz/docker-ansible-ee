@@ -7,6 +7,9 @@ RUN python3 -m pip install requests-oauthlib ; \
     python3 -m pip install awxkit ; \
     python3 -m pip install pymssql ; \
     python3 -m pip install packaging ; \
+    python3 -m pip install os ; \
+    python3 -m pip install pathlib ; \
+    python3 -m pip install gitpython ; \
     ansible-galaxy collection install community.okd --disable-gpg-verify ; \
     ansible-galaxy collection install community.general ; \
     ansible-galaxy collection install ansible.netcommon ; \
