@@ -27,14 +27,13 @@ jobs:
       run: echo "tag=$(date +%Y%m%d%H%M%S)" >> "$GITHUB_OUTPUT"
 
     - name: Build Docker image with timestamp tag
-      run: |
-        docker build . \
-          --file Dockerfile \
-          --tag shu5hu/ansible-ee:${{ steps.vars.outputs.tag }} \
-          --tag shu5hu/ansible-ee:latest \
-          --build-arg HUB_TOKEN=${{ secrets.AUTOMATION_HUB_TOKEN }}
-
-    - name: Push Docker images
-      run: |
-        docker push shu5hu/ansible-ee:${{ steps.vars.outputs.tag }}
-        docker push shu5hu/ansible-ee:latest
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: Dockerfile
+        push: true
+        tags: |
+          shu5hu/ansible-ee:${{ steps.vars.outputs.tag }}
+          shu5hu/ansible-ee:latest
+        secrets: |
+          id=hub_token,env=AUTOMATION_HUB_TOKEN
