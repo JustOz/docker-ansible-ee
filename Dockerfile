@@ -8,7 +8,7 @@ RUN mkdir -p /etc/ansible && \
 [galaxy_server.automation_hub]\nurl=https://console.redhat.com/api/automation-hub/content/published/\ntoken=%s\n\n\
 [galaxy_server.galaxy]\nurl=https://galaxy.ansible.com/\n" "$HUB_TOKEN" > /etc/ansible/ansible.cfg && \
     python3 -m pip install requests-oauthlib kubernetes jmespath PyYAML awxkit pymssql packaging gitpython pathlib && \
-    ansible-galaxy collection install ansible.controller --pre && \
+   # ansible-galaxy collection install ansible.controller --pre && \
     ansible-galaxy collection install community.general && \
     ansible-galaxy collection install community.okd --disable-gpg-verify && \
     ansible-galaxy collection install ansible.netcommon && \
