@@ -1,15 +1,10 @@
 # syntax=docker/dockerfile:1.4
 
-FROM registry.redhat.io/ansible-automation-platform-25/ee-minimal-rhel9
+FROM registry.redhat.io/ansible-automation-platform-25/ee-minimal-rhel9 as builder
 USER root
 
 RUN --mount=type=secret,id=hub_token \
-    if [ -f /run/secrets/hub_token ]; then \
-        echo "Secret file found"; \
-        HUB_TOKEN=$(cat /run/secrets/hub_token); \
-    else \
-        echo "Secret file NOT found"; exit 1; \
-    fi && \
+    HUB_TOKEN=$(cat /run/secrets/hub_token) && \
     mkdir -p /etc/ansible && \
     printf "[galaxy]\nserver_list = automation_hub, galaxy\n\n\
 [galaxy_server.automation_hub]\nurl=https://console.redhat.com/api/automation-hub/content/published/\ntoken=%s\n\n\
@@ -35,4 +30,8 @@ RUN --mount=type=secret,id=hub_token \
     ansible-galaxy collection install vmware.vmware && \
     python3 -m pip install -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt
 
-ENV ANSIBLE_CONFIG=/etc/ansible/ansible.cfg
+FROM registry.redhat.io/ansible-automation-platform-25/ee-minimal-rhel9
+USER root
+
+# Copy installed collections & dependencies from builder, but NOT ansible.cfg or secrets
+COPY --from=builder /root/.ansible /root/.ansible
