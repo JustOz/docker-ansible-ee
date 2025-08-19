@@ -30,9 +30,9 @@ jobs:
       run: |
         docker build \
           --build-arg HUB_TOKEN=${{ secrets.AUTOMATION_HUB_TOKEN }} \
-          -t shu5hu/ansible-ee:${{ steps.vars.outputs.tag }} \
-          -t shu5hu/ansible-ee:latest \
+          -t ${{ secrets.REPO_NAME }}:${{ steps.vars.outputs.tag }} \
+          -t ${{ secrets.REPO_NAME }}:latest \
           .
         
-        docker push shu5hu/ansible-ee:${{ steps.vars.outputs.tag }}
-        docker push shu5hu/ansible-ee:latest
+        docker push ${{ secrets.REPO_NAME }}:${{ steps.vars.outputs.tag }}
+        docker push ${{ secrets.REPO_NAME }}:latest
