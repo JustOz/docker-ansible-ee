@@ -7,8 +7,9 @@ RUN mkdir -p /etc/ansible && \
     printf "[galaxy]\nserver_list = automation_hub, galaxy\n\n\
 [galaxy_server.automation_hub]\nurl=https://cloud.redhat.com/api/automation-hub/\nauth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token\ntoken=%s\n\n\
 [galaxy_server.galaxy]\nurl=https://galaxy.ansible.com/\n" "$HUB_TOKEN" > /etc/ansible/ansible.cfg && \
-    python3 -m pip install requests-oauthlib kubernetes jmespath PyYAML awxkit pymssql packaging gitpython pathlib && \
+    python3 -m pip install requests-oauthlib kubernetes jmespath PyYAML awxkit pymssql packaging gitpython pathlib netaddr lxml psycopg2-binary && \
     ansible-galaxy collection install ansible.controller --pre && \
+    ansible-galaxy collection install redhat.rhbk --pre && \
     ansible-galaxy collection install community.general && \
     ansible-galaxy collection install community.okd --disable-gpg-verify && \
     ansible-galaxy collection install ansible.netcommon && \
@@ -19,6 +20,7 @@ RUN mkdir -p /etc/ansible && \
     ansible-galaxy collection install community.windows && \
     ansible-galaxy collection install microsoft.ad && \
     ansible-galaxy collection install microsoft.sql && \
+    ansible-galaxy collection install community.postgresql && \
     ansible-galaxy collection install f5networks.f5_modules && \
     ansible-galaxy collection install fortinet.fortios && \
     ansible-galaxy collection install fortinet.fortimanager && \
