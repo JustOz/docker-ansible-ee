@@ -13,6 +13,7 @@ RUN mkdir -p /etc/ansible && \
     ansible-galaxy collection install redhat.satellite --pre && \
     ansible-galaxy collection install redhat.satellite_operations --pre && \
     ansible-galaxy collection install redhat.openshift --pre && \
+    ansible-galaxy collection install kubernetes.core && \
     ansible-galaxy collection install community.general && \
     ansible-galaxy collection install community.okd --disable-gpg-verify && \
     ansible-galaxy collection install ansible.netcommon && \
