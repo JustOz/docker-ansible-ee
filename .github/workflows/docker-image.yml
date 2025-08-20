@@ -30,8 +30,8 @@ jobs:
       run: |
         docker build \
           --build-arg HUB_TOKEN=${{ secrets.AUTOMATION_HUB_TOKEN }} \
-          -t ${{ vars.REPO_NAME }}:${{ steps.vars.outputs.tag }} \
-          -t ${{ vars.REPO_NAME }}:latest \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.REPO_NAME }}:${{ steps.vars.outputs.tag }} \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.REPO_NAME }}:latest \
           .
         
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.REPO_NAME }}:${{ steps.vars.outputs.tag }}
