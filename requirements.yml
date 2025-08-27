@@ -1,0 +1,32 @@
+---
+collections:
+  - name: ansible.controller
+    source: automation_hub
+  - name: redhat.rhbk
+    source: automation_hub
+    version: 3.0.1
+  - name: redhat.satellite
+    source: automation_hub
+  - name: redhat.satellite_operations
+    source: automation_hub
+  - name: redhat.openshift
+    source: automation_hub
+
+  - name: community.general
+  - name: community.okd
+  - name: ansible.netcommon
+  - name: ansible.posix
+  - name: ansible.utils
+  - name: ansible.windows
+  - name: esp.bitbucket
+  - name: community.windows
+  - name: microsoft.ad
+  - name: microsoft.sql
+  - name: community.postgresql
+  - name: f5networks.f5_modules
+  - name: fortinet.fortios
+  - name: fortinet.fortimanager
+  - name: awx.awx
+  - name: theforeman.foreman
+  - name: community.vmware
+  - name: vmware.vmware
