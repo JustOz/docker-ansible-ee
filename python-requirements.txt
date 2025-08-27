@@ -1,0 +1,13 @@
+requests-oauthlib
+kubernetes
+jmespath
+PyYAML
+awxkit
+pymssql
+packaging
+gitpython
+pathlib
+netaddr
+lxml
+psycopg2-binary
+jsonpatch

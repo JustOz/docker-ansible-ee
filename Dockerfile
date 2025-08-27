@@ -9,24 +9,16 @@ RUN mkdir -p /etc/ansible && \
 [galaxy_server.automation_hub]\nurl=https://cloud.redhat.com/api/automation-hub/\nauth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token\ntoken=%s\n\n\
 [galaxy_server.galaxy]\nurl=https://galaxy.ansible.com/\n" "$HUB_TOKEN" > /etc/ansible/ansible.cfg
 
-# Pre-install python dependencies used by some collections
-RUN python3 -m pip install \
-        requests-oauthlib \
-        kubernetes \
-        jmespath \
-        PyYAML \
-        awxkit \
-        pymssql \
-        packaging \
-        gitpython \
-        pathlib \
-        netaddr \
-        lxml \
-        psycopg2-binary \
-        jsonpatch
 
-# Copy requirements.yml and install collections
-COPY requirements.yml /etc/ansible-requirements.yml
+# Copy python-requirements.txt and install modules
+COPY python-requirements.txt /etc/python-requirements.txt
+
+# Pre-install python dependencies used by some collections
+RUN microdnf install -y python3-pip && python3 -m pip install -r /etc/python-requirements.txt
+
+# Copy ansible-requirements.yml and install collections
+COPY ansible-requirements.yml /etc/ansible-requirements.yml
+
 RUN ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify && \
     python3 -m pip install -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
     sed -i '/token=/d' /etc/ansible/ansible.cfg
