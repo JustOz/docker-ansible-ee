@@ -9,8 +9,8 @@ RUN mkdir -p /etc/ansible && \
 [galaxy_server.automation_hub]\nurl=https://cloud.redhat.com/api/automation-hub/\nauth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token\ntoken=%s\n\n\
 [galaxy_server.galaxy]\nurl=https://galaxy.ansible.com/\n" "$HUB_TOKEN" > /etc/ansible/ansible.cfg
 
-# Delete default ansible collections
-RUN rm -rf /usr/share/ansible/collections/ansible_collections/ /home/runner/.ansible/collections
+# # Delete default ansible collections
+# RUN rm -rf /usr/share/ansible/collections/ansible_collections/ /home/runner/.ansible/collections
 
 # Copy python-requirements.txt and install modules
 COPY python-requirements.txt /etc/python-requirements.txt
