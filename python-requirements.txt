@@ -11,3 +11,4 @@ netaddr
 lxml
 psycopg2-binary
 jsonpatch
+pyVim
