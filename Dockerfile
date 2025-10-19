@@ -23,6 +23,7 @@ COPY ansible-requirements.yml /etc/ansible-requirements.yml
 
 RUN ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force && \
     python3.11 -m pip install -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
+    python3.9 -m pip install -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
     sed -i '/token=/d' /etc/ansible/ansible.cfg
 
 ENV ANSIBLE_CONFIG=/etc/ansible/ansible.cfg
