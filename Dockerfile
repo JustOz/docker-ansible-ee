@@ -1,4 +1,14 @@
+# ---------- Stage 1: Build aha ----------
+FROM fedora:40 AS aha_builder
+
+RUN dnf install -y gcc make tar gzip curl \
+ && curl -LO https://github.com/theZiz/aha/archive/refs/tags/v0.5.tar.gz \
+ && tar xzf v0.5.tar.gz \
+ && cd aha-0.5 && make
+
+# ---------- Stage 2: Main image ----------
 FROM registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9@sha256:fa3adff2c85d05a25c48ffc2adab87ecece0970aa2477346a8d5bf4b6196fe36
+
 USER root
 
 ARG HUB_TOKEN
@@ -9,16 +19,16 @@ RUN mkdir -p /etc/ansible && \
 [galaxy_server.automation_hub]\nurl=https://cloud.redhat.com/api/automation-hub/\nauth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token\ntoken=%s\n\n\
 [galaxy_server.galaxy]\nurl=https://galaxy.ansible.com/\n" "$HUB_TOKEN" > /etc/ansible/ansible.cfg
 
-# # Delete default ansible collections
-# RUN rm -rf /usr/share/ansible/collections/ansible_collections/ /home/runner/.ansible/collections
-
-# Copy python-requirements.txt and install modules
+# Copy python-requirements.txt and install Python modules
 COPY python-requirements.txt /etc/python-requirements.txt
 
-# Pre-install python dependencies used by some collections
-RUN microdnf install -y python3.11-pip && python3.11 -m pip install -r /etc/python-requirements.txt
-RUN microdnf install -y python3.9-pip && python3.9 -m pip install -r /etc/python-requirements.txt
-RUN microdnf install epel-release -y && microdnf update -y && microdnf install -y aha
+RUN microdnf install -y python3.11-pip python3.9-pip && \
+    python3.11 -m pip install -r /etc/python-requirements.txt && \
+    python3.9 -m pip install -r /etc/python-requirements.txt && \
+    microdnf clean all
+
+# Copy prebuilt aha binary from builder
+COPY --from=aha_builder /aha-0.5/aha /usr/local/bin/aha
 
 # Copy ansible-requirements.yml and install collections
 COPY ansible-requirements.yml /etc/ansible-requirements.yml
