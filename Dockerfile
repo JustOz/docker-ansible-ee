@@ -18,7 +18,7 @@ COPY python-requirements.txt /etc/python-requirements.txt
 # Pre-install python dependencies used by some collections
 RUN microdnf install -y python3.11-pip && python3.11 -m pip install -r /etc/python-requirements.txt
 RUN microdnf install -y python3.9-pip && python3.9 -m pip install -r /etc/python-requirements.txt
-RUN microdnf install -y aha
+RUN microdnf install epel-release -y && microdnf update -y && microdnf install -y aha
 
 # Copy ansible-requirements.yml and install collections
 COPY ansible-requirements.yml /etc/ansible-requirements.yml
