@@ -1,12 +1,4 @@
-# ---------- Stage 1: Build aha ----------
-FROM fedora:40 AS aha_builder
-
-RUN dnf install -y gcc make tar gzip curl \
- && curl -LO https://github.com/theZiz/aha/archive/refs/tags/v0.5.tar.gz \
- && tar xzf v0.5.tar.gz \
- && cd aha-0.5 && make
-
-# ---------- Stage 2: Main image ----------
+# ---------- Main image ----------
 FROM registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9@sha256:fa3adff2c85d05a25c48ffc2adab87ecece0970aa2477346a8d5bf4b6196fe36
 
 USER root
@@ -26,9 +18,6 @@ RUN microdnf install -y python3.11-pip python3.9-pip && \
     python3.11 -m pip install -r /etc/python-requirements.txt && \
     python3.9 -m pip install -r /etc/python-requirements.txt && \
     microdnf clean all
-
-# Copy prebuilt aha binary from builder
-COPY --from=aha_builder /aha-0.5/aha /usr/local/bin/aha
 
 # Copy ansible-requirements.yml and install collections
 COPY ansible-requirements.yml /etc/ansible-requirements.yml
