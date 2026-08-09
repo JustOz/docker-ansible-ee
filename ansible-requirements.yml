@@ -125,7 +125,7 @@ collections:
 
   - name: community.vmware
     source: galaxy
-    version: 5.2.1
+    version: 6.2.1
 
   # Collection to manage VMware
   - name: vmware.vmware
