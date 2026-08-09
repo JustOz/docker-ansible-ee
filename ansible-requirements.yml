@@ -71,9 +71,10 @@ collections:
     version: 2.0.1          # 16.07.26
 
   # Export and Import Satellite configuration using Configuration as Code
-  - name: infra.satellite_configuration
-    source: galaxy
-    version: 1.3.2          # 01.08.26
+  # Commented because requires a lower version of redhat.satellite (5.8.0)
+  # - name: infra.satellite_configuration
+  #   source: galaxy
+  #   version: 1.3.2          # 01.08.26
 
   # Consider: 
   #   - infra.support_assist - Ansible Collection that will gather various reports/outputs that are commonly asked for in Red Hat   Support Cases
