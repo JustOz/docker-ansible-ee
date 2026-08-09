@@ -29,12 +29,16 @@ ENV UV_LINK_MODE=copy
 # Copy python-requirements.txt and install Python modules
 COPY python-requirements.txt /etc/python-requirements.txt
 
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --python python3.11 --system -r /etc/python-requirements.txt && \
-    uv pip install --python python3.9 --system -r /etc/python-requirements.txt && \
-    find /usr/lib/python3.11 /usr/lib64/python3.11 /usr/local/lib/python3.11 \
-         /usr/lib/python3.9  /usr/lib64/python3.9  /usr/local/lib/python3.9 \
-         -type d -name '__pycache__' -prune -exec rm -rf {} + 2>/dev/null || true
+RUN --mount=type=cache,target=/root/.cache/uv <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+uv pip install --python python3 --system -r /etc/python-requirements.txt
+
+# Trim bytecode caches so this layer doesn't carry dead weight.
+find /usr/lib/python3.* /usr/lib64/python3.* /usr/local/lib/python3.* \
+    -maxdepth 6 -type d -name '__pycache__' -prune -exec rm -rf {} + || true
+EOF
 
 # Copy ansible-requirements.yml and install collections
 COPY ansible-requirements.yml /etc/ansible-requirements.yml
@@ -42,20 +46,43 @@ COPY ansible-requirements.yml /etc/ansible-requirements.yml
 # Token is mounted as a build secret (id must match --secret in the build command)
 # and only ever exists on disk inside this single layer's temporary filesystem.
 RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=secret,id=automation_hub_token \
-    test -s /run/secrets/automation_hub_token || { echo "ERROR: automation_hub_token secret is missing or empty; pass --secret id=automation_hub_token,env=AUTOMATION_HUB_TOKEN (or ,src=<file>)" >&2; exit 1; } && \
-    sed -i "/\[galaxy_server.redhat_automation_hub\]/a token=$(cat /run/secrets/automation_hub_token)" /etc/ansible/ansible.cfg && \
-    curl -s https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token \
-      -d grant_type=refresh_token -d client_id=cloud-services \
-      -d refresh_token="$(cat /run/secrets/automation_hub_token)" | head -c 2000 ; echo ; \
-    ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force -vvv && \
-    uv pip install --python python3.11 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
-    uv pip install --python python3.9 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
-    sed -i '/token=/d' /etc/ansible/ansible.cfg && \
-    find ~/.ansible/collections/ansible_collections -mindepth 2 -maxdepth 4 -type d \
-         \( -name tests -o -name test -o -name '.github' -o -name docs -o -name changelogs \) \
-         -exec rm -rf {} + 2>/dev/null ; \
-    find ~/.ansible/collections/ansible_collections -name '*.pyc' -delete && \
-    rm -rf ~/.ansible/tmp
+    --mount=type=secret,id=automation_hub_token <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+TOKEN_FILE=/run/secrets/automation_hub_token
+if [ ! -s "$TOKEN_FILE" ]; then
+    echo "ERROR: automation_hub_token secret is missing or empty;" \
+         "pass --secret id=automation_hub_token,env=AUTOMATION_HUB_TOKEN (or ,src=<file>)" >&2
+    exit 1
+fi
+
+# Inject the token for this build only; stripped again below before the layer is committed.
+sed -i "/\[galaxy_server.redhat_automation_hub\]/a token=$(cat "$TOKEN_FILE")" /etc/ansible/ansible.cfg
+
+# --- TEMPORARY DEBUG: dump the raw SSO token-exchange response ---
+echo "--- SSO token exchange debug ---"
+curl -s https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token \
+    -d grant_type=refresh_token -d client_id=cloud-services \
+    -d refresh_token="$(cat "$TOKEN_FILE")" | head -c 2000
+echo
+echo "--- end debug ---"
+# --- end temporary debug ---
+
+ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force -vvv
+
+uv pip install --python python3 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt
+
+sed -i '/token=/d' /etc/ansible/ansible.cfg
+
+# Trim collection docs/tests to keep the layer small. meta/ is left intact:
+# ansible-core needs meta/runtime.yml for collection redirects at runtime.
+find ~/.ansible/collections/ansible_collections -mindepth 2 -maxdepth 4 -type d \
+    \( -name tests -o -name test -o -name '.github' -o -name docs -o -name changelogs \) \
+    -exec rm -rf {} + || true
+
+find ~/.ansible/collections/ansible_collections -name '*.pyc' -delete
+rm -rf ~/.ansible/tmp
+EOF
 
 ENV ANSIBLE_CONFIG=/etc/ansible/ansible.cfg
