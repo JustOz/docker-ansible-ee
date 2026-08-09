@@ -7,8 +7,8 @@ ARG HUB_TOKEN
 
 # Configure Ansible with automation hub auth
 RUN mkdir -p /etc/ansible && \
-    printf "[galaxy]\nserver_list = automation_hub, galaxy\n\n\
-[galaxy_server.automation_hub]\nurl=https://cloud.redhat.com/api/automation-hub/\nauth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token\ntoken=%s\n\n\
+    printf "[galaxy]\nserver_list = redhat_automation_hub, galaxy\n\n\
+[galaxy_server.redhat_automation_hub]\nurl=https://cloud.redhat.com/api/automation-hub/\nauth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token\ntoken=%s\n\n\
 [galaxy_server.galaxy]\nurl=https://galaxy.ansible.com/\n" "$HUB_TOKEN" > /etc/ansible/ansible.cfg
 
 # Copy python-requirements.txt and install Python modules

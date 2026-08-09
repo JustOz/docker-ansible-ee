@@ -31,7 +31,7 @@ jobs:
       - name: Build and push Docker image (multi-stage)
         run: |
           docker build \
-            --build-arg HUB_TOKEN=${{ secrets.AUTOMATION_HUB_TOKEN }} \
+            --build-arg HUB_TOKEN=${{ secrets.redhat_automation_hub_TOKEN }} \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.repo_name }}:${{ steps.vars.outputs.tag }} \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.vars.outputs.repo_name }}:latest \
             .
