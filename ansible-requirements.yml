@@ -58,7 +58,7 @@ collections:
   # A collection of roles to extend functionality of aap_configuration collection
   - name: infra.aap_configuration_extended
     source: redhat_automation_hub
-    version: 4.9.1          # 06.07.26
+    # version: 4.9.1          # 06.07.26
 
   # A collection of utility roles for usage with Ansible Automation Platform
   - name: infra.aap_utilities
