@@ -38,7 +38,7 @@ jobs:
           TAG: ${{ steps.vars.outputs.tag }}
         run: |
           docker build \
-            --build-arg AUTOMATION_HUB_TOKEN="$AUTOMATION_HUB_TOKEN" \
+            --secret id=automation_hub_token,env=AUTOMATION_HUB_TOKEN \
             -t "$DOCKERHUB_USERNAME/$REPO_NAME:$TAG" \
             -t "$DOCKERHUB_USERNAME/$REPO_NAME:latest" \
             .
