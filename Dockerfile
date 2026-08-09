@@ -45,6 +45,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=secret,id=automation_hub_token \
     test -s /run/secrets/automation_hub_token || { echo "ERROR: automation_hub_token secret is missing or empty; pass --secret id=automation_hub_token,env=AUTOMATION_HUB_TOKEN (or ,src=<file>)" >&2; exit 1; } && \
     sed -i "/\[galaxy_server.redhat_automation_hub\]/a token=$(cat /run/secrets/automation_hub_token)" /etc/ansible/ansible.cfg && \
+    curl -s https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token \
+      -d grant_type=refresh_token -d client_id=cloud-services \
+      -d refresh_token="$(cat /run/secrets/automation_hub_token)" | head -c 2000 ; echo ; \
     ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force -vvv && \
     uv pip install --python python3.11 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
     uv pip install --python python3.9 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
