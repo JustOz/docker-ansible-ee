@@ -50,29 +50,29 @@ collections:
     source: redhat_automation_hub
     version: 5.0.0          # 12.06.25
 
-  # # A collection of roles to manage Ansible Controller
-  # - name: infra.aap_configuration
-  #   source: redhat_automation_hub
-  #   # version: 4.7.0          # 01.07.26
-  
-  # # A collection of roles to extend functionality of aap_configuration collection
-  # - name: infra.aap_configuration_extended
-  #   source: redhat_automation_hub
-  #   # version: 4.9.1          # 06.07.26
+  # A collection of roles to manage Ansible Controller
+  - name: infra.aap_configuration
+    source: galaxy
+    version: 4.7.0          # 01.07.26
+
+  # A collection of roles to extend functionality of aap_configuration collection
+  - name: infra.aap_configuration_extended
+    source: galaxy
+    version: 4.9.1          # 06.07.26
 
   # A collection of utility roles for usage with Ansible Automation Platform
   - name: infra.aap_utilities
-    source: redhat_automation_hub
+    source: galaxy
     version: 3.5.0          # 01.07.26
 
   # Ansible moduels to configre Red Hat Advanced Cluster Security for Kubernetes (RHACS) and StackRox installations.
   - name: infra.rhacs_configuration
-    source: redhat_automation_hub
+    source: galaxy
     version: 2.0.1          # 16.07.26
-  
+
   # Export and Import Satellite configuration using Configuration as Code
   - name: infra.satellite_configuration
-    source: redhat_automation_hub
+    source: galaxy
     version: 1.3.2          # 01.08.26
 
   # Consider: 
