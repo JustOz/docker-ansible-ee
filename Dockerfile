@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---------- Main image ----------
-FROM registry.redhat.io/ansible-automation-platform-25/ee-supported-rhel9@sha256:fa3adff2c85d05a25c48ffc2adab87ecece0970aa2477346a8d5bf4b6196fe36
+FROM registry.redhat.io/ansible-automation-platform-26/ee-supported-rhel9:2.0-1785777436@sha256:7dfd8a045a5df672dc2b4f76bff307c0a78c1703e0572f10c1e07bd46e735947
 
 USER root
 
@@ -43,6 +43,7 @@ COPY ansible-requirements.yml /etc/ansible-requirements.yml
 # and only ever exists on disk inside this single layer's temporary filesystem.
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=secret,id=automation_hub_token \
+    test -s /run/secrets/automation_hub_token || { echo "ERROR: automation_hub_token secret is missing or empty; pass --secret id=automation_hub_token,env=AUTOMATION_HUB_TOKEN (or ,src=<file>)" >&2; exit 1; } && \
     sed -i "/\[galaxy_server.redhat_automation_hub\]/a token=$(cat /run/secrets/automation_hub_token)" /etc/ansible/ansible.cfg && \
     ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force && \
     uv pip install --python python3.11 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
