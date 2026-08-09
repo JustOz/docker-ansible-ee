@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      REDHAT_USERNAME: ${{ secrets.REDHAT_USERNAME }}
+      DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+      REDHAT_USERNAME: ${{ vars.REDHAT_USERNAME }}
 
     steps:
       - uses: actions/checkout@v4
