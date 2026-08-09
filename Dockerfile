@@ -45,7 +45,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=secret,id=automation_hub_token \
     test -s /run/secrets/automation_hub_token || { echo "ERROR: automation_hub_token secret is missing or empty; pass --secret id=automation_hub_token,env=AUTOMATION_HUB_TOKEN (or ,src=<file>)" >&2; exit 1; } && \
     sed -i "/\[galaxy_server.redhat_automation_hub\]/a token=$(cat /run/secrets/automation_hub_token)" /etc/ansible/ansible.cfg && \
-    ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force && \
+    ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force -vvv && \
     uv pip install --python python3.11 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
     uv pip install --python python3.9 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt && \
     sed -i '/token=/d' /etc/ansible/ansible.cfg && \
