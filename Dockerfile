@@ -60,28 +60,23 @@ fi
 # Inject the token for this build only; stripped again below before the layer is committed.
 sed -i "/\[galaxy_server.redhat_automation_hub\]/a token=$(cat "$TOKEN_FILE")" /etc/ansible/ansible.cfg
 
-# --- TEMPORARY DEBUG: dump the raw SSO token-exchange response ---
-echo "--- SSO token exchange debug ---"
-curl -s https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token \
-    -d grant_type=refresh_token -d client_id=cloud-services \
-    -d refresh_token="$(cat "$TOKEN_FILE")" | head -c 2000
-echo
-echo "--- end debug ---"
-# --- end temporary debug ---
+# Install directly into the base image's collections path (instead of the default
+# ~/.ansible/collections) so there's exactly one copy of each collection on disk,
+# no shadowing/duplication against what the base image already bundles.
+ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force \
+    --collections-path /usr/share/ansible/collections
 
-ansible-galaxy collection install -r /etc/ansible-requirements.yml --pre --disable-gpg-verify --force -vvv
-
-uv pip install --python python3 --system -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt
+uv pip install --python python3 --system -r /usr/share/ansible/collections/ansible_collections/community/vmware/requirements.txt
 
 sed -i '/token=/d' /etc/ansible/ansible.cfg
 
 # Trim collection docs/tests to keep the layer small. meta/ is left intact:
 # ansible-core needs meta/runtime.yml for collection redirects at runtime.
-find ~/.ansible/collections/ansible_collections -mindepth 2 -maxdepth 4 -type d \
+find /usr/share/ansible/collections/ansible_collections -mindepth 2 -maxdepth 4 -type d \
     \( -name tests -o -name test -o -name '.github' -o -name docs -o -name changelogs \) \
     -exec rm -rf {} + || true
 
-find ~/.ansible/collections/ansible_collections -name '*.pyc' -delete
+find /usr/share/ansible/collections/ansible_collections -name '*.pyc' -delete
 rm -rf ~/.ansible/tmp
 EOF
 
