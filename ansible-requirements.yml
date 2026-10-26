@@ -3,72 +3,72 @@ collections:
   # Ansible content that interacts with the AWX or Automation Platform Controller API.
   - name: ansible.controller
     source: redhat_automation_hub
-    version: 4.8.4         # 27.07.26
+    version: 4.8.12           # 10.26
 
   # A collection for migrating AAP clsuters between installation platforms
   - name: ansible.aap_snapshot
     source: redhat_automation_hub
-    version: 1.0.5        # 16.07.26
+    version: 1.1.2            # 10.26
   
   # Ansible Collection with common content to help automate the management of network, security, and cloud devices.
   - name: ansible.netcommon
     source: redhat_automation_hub
-    version: 8.6.1        # 23.07.26
+    version: 8.7.1            # 09.26
 
   # Ansible Collection targeting POSIX and POSIX-ish platforms.
   - name: ansible.posix
     source: redhat_automation_hub
-    version: 2.2.2        # 13.07.26
+    version: 2.2.2            # 07.26
 
   # Ansible Collection with utilities to ease the management, manipulation, and validation of data within a playbook 
   - name: ansible.utils
     source: redhat_automation_hub
-    version: 6.0.3        # 16.06.26
+    version: 6.1.1            # 17.26
 
   # Ansible collection for core Windows plugins.
   - name: ansible.windows
     source: redhat_automation_hub
-    version: 3.7.0        # 14.07.26
+    version: 3.8.0            # 08.26
 
   # Insatll and configure a keycloak, or Red Hat Single Sign-on, service.
   - name: redhat.rhbk
     source: redhat_automation_hub
-    version: 3.0.2          # 25.06.26
+    version: 3.0.2            # 06.26
 
   # Ansible Modules to manage Satellite installations
   - name: redhat.satellite
     source: redhat_automation_hub
-    version: 5.11.0         # 17.04.26
+    version: 6.0.0            # 10.26
 
   # Satellite operations tasks such as install and maintenance
   - name: redhat.satellite_operations
     source: redhat_automation_hub
-    version: 4.0.0          # 24.03.26
+    version: 4.0.0            # 03.26
 
   # OpenShift Collection for Ansible
   - name: redhat.openshift
     source: redhat_automation_hub
-    version: 5.0.0          # 12.06.25
+    version: 6.0.0            # 08.25
 
   # A collection of roles to manage Ansible Controller
   - name: infra.aap_configuration
     source: galaxy
-    version: 4.7.0          # 01.07.26
+    version: 4.7.0            # 01.07.26
 
   # A collection of roles to extend functionality of aap_configuration collection
   - name: infra.aap_configuration_extended
     source: galaxy
-    version: 4.9.1          # 06.07.26
+    version: 4.9.1            # 06.07.26
 
   # A collection of utility roles for usage with Ansible Automation Platform
   - name: infra.aap_utilities
     source: galaxy
-    version: 3.5.0          # 01.07.26
+    version: 3.5.0            # 01.07.26
 
   # Ansible moduels to configre Red Hat Advanced Cluster Security for Kubernetes (RHACS) and StackRox installations.
   - name: infra.rhacs_configuration
     source: galaxy
-    version: 2.0.1          # 16.07.26
+    version: 2.0.1            # 16.07.26
 
   # Export and Import Satellite configuration using Configuration as Code
   # Commented because requires a lower version of redhat.satellite (5.8.0)
@@ -95,7 +95,7 @@ collections:
   # Ansible collection for Active Directory management
   - name: microsoft.ad
     source: redhat_automation_hub
-    version: 1.12.0         # 14.07.26
+    version: 1.12.0             # 14.07.26
 
   - name: community.postgresql
     source: galaxy
@@ -108,12 +108,12 @@ collections:
   # A collection of Ansible modules for FortiOS v6
   - name: fortinet.fortios
     source: redhat_automation_hub
-    version: 2.5.1          # 18.04.26
+    version: 2.5.1              # 18.04.26
 
   # The FortiManager Ansible Collection.
   - name: fortinet.fortimanager
     source: redhat_automation_hub
-    version: 2.14.0         # 15.05.26
+    version: 2.14.0             # 15.05.26
 
   # Ansible content that interacts with the AWX or Automation Platform Controller API.
   - name: awx.awx
@@ -131,12 +131,12 @@ collections:
   # Collection to manage VMware
   - name: vmware.vmware
     source: redhat_automation_hub
-    version: 2.9.0          # 11.06.26 
+    version: 2.9.0              # 11.06.26 
 
   # VMware collection for Ansible
   - name: vmware.vmware_rest
     source: redhat_automation_hub
-    version: 4.11.0         # 11.06.26
+    version: 4.11.0             # 11.06.26
 
   # Kubernetes Collection for Ansible. 
   # (https://galaxy.ansible.com/ui/repo/published/kubernetes/core/)
